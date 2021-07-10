@@ -21,9 +21,9 @@ exports.Insert = (req, res, next) => {
         recebido: recebido
     })
         //then = registra o que queremos que aconteca quando a Promise for resolvida
-        .then(receita => {
-            if (receita) {
-                res.status(status.OK).send(receita);
+        .then(receitas => {
+            if (receitas) {
+                res.status(status.OK).send(receitas);
             } else {
                 res.status(status.NOT_FOUND).send();
             }
