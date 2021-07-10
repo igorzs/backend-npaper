@@ -1,4 +1,4 @@
-const http = require('http');
+/*const http = require('http');
 const express = require('express');
 const status = require ('http-status');
 const sequelize = require ('./src/database/database');
@@ -32,10 +32,10 @@ sequelize.sync({force: false}).then( () => {
 app.get('/home', (req, res) => {
     res.json({message : 'nPaper - Tela inicial da aplicação'})
 });
+*/
 
 
 
-/*
 const express = require('express');
 
 const app = express();
@@ -52,4 +52,3 @@ app.get('/home', (req, res) => {
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`Server running on ${port}, http://localhost:${port}`));
-*/
