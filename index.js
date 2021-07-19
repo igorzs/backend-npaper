@@ -6,7 +6,7 @@ const app = express();
 const routes = require ('./src/routes/routes.js');
 const cors = require('cors');
 
-/*app.use(express.json());
+app.use(express.json());
 
 app.use(cors());
 
@@ -29,12 +29,12 @@ sequelize.sync({force: false}).then( () => {
     app.set("port", port);
     const server = http.createServer(app);
     server.listen(port);
-});*/
+});
 
 
 
 
-const express = require('express');
+/*const express = require('express');
 
 const app = express();
 
@@ -49,5 +49,5 @@ app.get('/home', (req, res) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Server running on ${port}, http://localhost:${port}`));
+app.listen(port, () => console.log(`Server running on ${port}, http://localhost:${port}`));*/
 
