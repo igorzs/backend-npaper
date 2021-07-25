@@ -10,7 +10,11 @@ app.use(express.json());
 
 app.use(cors());
 
-app.use('/home', routes);
+app.use('/api', routes);
+
+app.get('/', (req, res) => {
+    res.json({message : 'nPaper - ADS 2021'})
+});
 
 app.use((req, res, next) => {
     res.status.apply(status.NOT_FOUND).send("Page not found");
@@ -29,14 +33,8 @@ sequelize.sync({force: false}).then( () => {
 
 
 
-app.get('/home', (req, res) => {
-    res.json({message : 'nPaper - Tela inicial da aplicação'})
-});
 
-
-
-/*
-const express = require('express');
+/*const express = require('express');
 
 const app = express();
 
@@ -51,5 +49,5 @@ app.get('/home', (req, res) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Server running on ${port}, http://localhost:${port}`));
-*/
+app.listen(port, () => console.log(`Server running on ${port}, http://localhost:${port}`));*/
+
