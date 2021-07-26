@@ -1,4 +1,4 @@
-const Lancamentos = require('../models/lancamentos');
+const Lancamento = require('../models/lancamento');
 const status = require('http-status');
 
 
@@ -11,13 +11,15 @@ exports.Insert = (req, res, next) => {
     const descricao = req.body.descricao;
     const valor = req.body.valor;
     const data = req.body.data;
+    const recebido = req.body.recebido;
     const isDespesa = req.body.isDespesa;
 
     //aqui passa os parametros com dados para os atributos do model
-    Lancamentos.create({
+    Lancamento.create({
         descricao: descricao,
         valor: valor,
         data: data,
+        recebido: recebido,
         isDespesa: isDespesa
     })
         //then = registra o que queremos que aconteca quando a Promise for resolvida
@@ -33,10 +35,10 @@ exports.Insert = (req, res, next) => {
 };
 
 exports.SearchAll = (req, res, next) => {
-    Lancamentos.findAll()
-        .then(lancamentos => {
-            if (lancamentos) {
-                res.status(status.OK).send(lancamentos);
+    Lancamento.findAll()
+        .then(lancamento => {
+            if (lancamento) {
+                res.status(status.OK).send(lancamento);
             }
         })
         .catch(error => next(error));
@@ -45,10 +47,10 @@ exports.SearchAll = (req, res, next) => {
 exports.SearchOne = (req, res, next) => {
     const id = req.params.id;
 
-    Lancamentos.findByPk(id)
-        .then(lancamentos => {
-            if (lancamentos) {
-                res.status(status.OK).send(lancamentos);
+    Lancamento.findByPk(id)
+        .then(lancamento => {
+            if (lancamento) {
+                res.status(status.OK).send(lancamento);
             } else {
                 res.status(status.NOT_FOUND).send();
             }
@@ -64,19 +66,21 @@ exports.Update = (req, res, next) => {
     const descricao = req.body.descricao;
     const valor = req.body.valor;
     const data = req.body.data;
+    const recebido = req.body.recebido;
     const isDespesa = req.body.isDespesa;
 
-    Lancamentos.findByPk(id)
+    Lancamento.findByPk(id)
         //primeiro precisamos verificar se o dado existe
         //then = registra o que queremos que aconteca quando a Promise for resolvida
-        .then(lancamentos => {
-            if (lancamentos) {
+        .then(lancamento => {
+            if (lancamento) {
                 //se existir, vai atualizar
                 //passa um objeto com as infos
-                lancamentos.update({
+                lancamento.update({
                     descricao: descricao,
                     valor: valor,
                     data: data,
+                    recebido: recebido,
                     isDespesa: isDespesa
                 },
                     //recebe um parametro id na clausula where
@@ -101,10 +105,10 @@ exports.Update = (req, res, next) => {
 exports.Delete = (req, res, next) => {
     const id = req.params.id;
 
-    Lancamentos.findByPk(id)
-        .then(lancamentos => {
-            if (lancamentos) {
-                lancamentos.destroy({
+    Lancamento.findByPk(id)
+        .then(lancamento => {
+            if (lancamento) {
+                lancamento.destroy({
                     where: { id: id }
                 })
                     .then(() => {
