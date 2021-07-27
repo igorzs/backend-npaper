@@ -1,5 +1,7 @@
 const Usuario = require('../models/usuario');
+const config = require('../config/config');
 const status = require('http-status');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 exports.Insert = (req, res, next) => {
@@ -91,18 +93,43 @@ exports.Delete = (req, res, next) => {
     const id = req.params.id;
 
     Usuario.findByPk(id)
-    .then(usuario => {
-        if(usuario){
-            usuario.destroy({
-                where: {id:id}
-            })
-            .then(()=>{
-                res.status(status.OK).send();
-            })
-            .catch(error => next(error));
-        }else{
-            res.status(status.NOT_FOUND).send();
-        }
-    })
-    .catch(error => next(error));
+        .then(usuario => {
+            if (usuario) {
+                usuario.destroy({
+                    where: { id: id }
+                })
+                    .then(() => {
+                        res.status(status.OK).send();
+                    })
+                    .catch(error => next(error));
+            } else {
+                res.status(status.NOT_FOUND).send();
+            }
+        })
+        .catch(error => next(error));
 }
+
+
+const omitHash = (user) => {
+    const { hash, ...userWithoutHash } = user;
+    return userWithoutHash;
+}
+
+const authenticate = async (email, password) => {
+    try {
+        const user = await Usuario.findOne({ where: { email } });
+        console.log('user: ', user);
+
+        if (!user || !(await bcrypt.compare(password, user.senha_hash)))
+            throw 'Username or password is incorrect';
+
+        const token = jwt.sign({ sub: user.id }, config.secret.secret, { expiresIn: '7d' });
+        return { ...omitHash(user.get()), token };
+    } catch (error) {
+        return error;
+    }
+}
+
+
+
+module.exports.authenticate = authenticate;

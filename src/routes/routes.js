@@ -17,6 +17,14 @@ router.get('/cadastro/:id', UsuarioController.SearchOne);
 router.put('/cadastro/:id', UsuarioController.Update);
 router.delete('/cadastro/:id', UsuarioController.Delete);
 
+router.post('/authenticate', async (req, res) => {
+    if (!!req.body.email && !!req.body.senha) {
+    const user = await UsuarioController.authenticate(req.body.email, req.body.senha);
+    res.send(user.token);
+    } else {
+        res.sendStatus(500);
+    } 
 
+});
 
 module.exports = router;
