@@ -6,7 +6,7 @@ const sequelize = require('../database/database.js');
 //o define cria a tabela no bd
 //o nome da tabela é invoice
 //defino os atributos
-const Receita = sequelize.define("receitas", {
+const Lancamento = sequelize.define("lancamentos", {
     id: {
         allowNull: false,
         autoIncrement: true,
@@ -31,11 +31,15 @@ const Receita = sequelize.define("receitas", {
         allowNull: false,
         type: Sequelize.DATE()
     },
-    recebido: {
+    situacao: {
         allowNull: false,
         type: Sequelize.BOOLEAN(),
         defaultValue: true
+    },
+    tipo: {
+        allowNull: false,
+        type: Sequelize.INTEGER()
     }
 });
 
-module.exports = Receita;
+module.exports = Lancamento;
