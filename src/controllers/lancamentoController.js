@@ -1,4 +1,4 @@
-const Receita = require('../models/receita');
+const Lancamento = require('../models/lancamento');
 const status = require('http-status');
 
 
@@ -11,19 +11,21 @@ exports.Insert = (req, res, next) => {
     const descricao = req.body.descricao;
     const valor = req.body.valor;
     const data = req.body.data;
-    const recebido = req.body.recebido;
+    const situacao = req.body.situacao;
+    const tipo = req.body.tipo;
 
     //aqui passa os parametros com dados para os atributos do model
-    Receita.create({
+    Lancamento.create({
         descricao: descricao,
         valor: valor,
         data: data,
-        recebido: recebido
+        situacao: situacao,
+        tipo: tipo
     })
         //then = registra o que queremos que aconteca quando a Promise for resolvida
-        .then(receitas => {
-            if (receitas) {
-                res.status(status.OK).send(receitas);
+        .then(lancamentos => {
+            if (lancamentos) {
+                res.status(status.OK).send(lancamentos);
             } else {
                 res.status(status.NOT_FOUND).send();
             }
@@ -33,10 +35,38 @@ exports.Insert = (req, res, next) => {
 };
 
 exports.SearchAll = (req, res, next) => {
-    Receita.findAll()
-        .then(receita => {
-            if (receita) {
-                res.status(status.OK).send(receita);
+    Lancamento.findAll()
+        .then(lancamento => {
+            if (lancamento) {
+                res.status(status.OK).send(lancamento);
+            }
+        })
+        .catch(error => next(error));
+}
+
+exports.GetAllReceitas = (req, res, next) => {
+    Lancamento.findAll({
+        where: {
+            tipo: 1
+        }
+    })
+        .then(lancamento => {
+            if (lancamento) {
+                res.status(status.OK).send(lancamento);
+            }
+        })
+        .catch(error => next(error));
+}
+
+exports.GetAllDespesas = (req, res, next) => {
+    Lancamento.findAll({
+        where: {
+            tipo: 2
+        }
+    })
+        .then(lancamento => {
+            if (lancamento) {
+                res.status(status.OK).send(lancamento);
             }
         })
         .catch(error => next(error));
@@ -45,10 +75,10 @@ exports.SearchAll = (req, res, next) => {
 exports.SearchOne = (req, res, next) => {
     const id = req.params.id;
 
-    Receita.findByPk(id)
-        .then(receita => {
-            if (receita) {
-                res.status(status.OK).send(receita);
+    Lancamento.findByPk(id)
+        .then(lancamento => {
+            if (lancamento) {
+                res.status(status.OK).send(lancamento);
             } else {
                 res.status(status.NOT_FOUND).send();
             }
@@ -64,16 +94,17 @@ exports.Update = (req, res, next) => {
     const descricao = req.body.descricao;
     const valor = req.body.valor;
     const data = req.body.data;
-    const recebido = req.body.recebido;
+    const situacao = req.body.situacao;
+    const tipo = req.body.tipo;
 
-    Receita.findByPk(id)
+    Lancamento.findByPk(id)
         //primeiro precisamos verificar se o dado existe
         //then = registra o que queremos que aconteca quando a Promise for resolvida
-        .then(receita => {
-            if (receita) {
+        .then(lancamento => {
+            if (lancamento) {
                 //se existir, vai atualizar
                 //passa um objeto com as infos
-                receita.update({
+                lancamento.update({
                     descricao: descricao,
                     valor: valor,
                     data: data,
@@ -101,10 +132,10 @@ exports.Update = (req, res, next) => {
 exports.Delete = (req, res, next) => {
     const id = req.params.id;
 
-    Receita.findByPk(id)
-        .then(receita => {
-            if (receita) {
-                receita.destroy({
+    Lancamento.findByPk(id)
+        .then(lancamento => {
+            if (lancamento) {
+                lancamento.destroy({
                     where: { id: id }
                 })
                     .then(() => {
