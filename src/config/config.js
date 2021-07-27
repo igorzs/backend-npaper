@@ -1,4 +1,4 @@
-
+  
 //STRING DE CONEXAO
 
 module.exports = {
@@ -12,15 +12,14 @@ module.exports = {
             password: 'vlosscom_npaper'
         }
     },
-    production: {
+    production:{
         database: {
             host: process.env.DB_HOST,
             host: process.env.DB_PORT
         }
     },
-
+    
     secret: {
         secret: "segredo",
     }
-
 }
