@@ -13,7 +13,7 @@ exports.Insert = (req, res, next) => {
     const data = req.body.data;
     const situacao = req.body.situacao;
     const tipo = req.body.tipo;
-
+console.log(valor)
     //aqui passa os parametros com dados para os atributos do model
     Lancamento.create({
         descricao: descricao,
