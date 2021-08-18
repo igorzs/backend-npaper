@@ -10,6 +10,8 @@ router.get('/receita', LancamentoController.GetAllReceitas);
 router.get('/lancamento/:id', LancamentoController.SearchOne);
 router.put('/lancamento/:id', LancamentoController.Update);
 router.delete('/lancamento/:id', LancamentoController.Delete);
+router.get('/despesas-usuario/:idUser', LancamentoController.GetAllDespesasUsuario);
+router.get('/receitas-usuario/:idUser', LancamentoController.GetAllReceitasUsuario);
 
 //ROTAS:: CADASTRO DE USUARIOS
 router.post('/cadastro', UsuarioController.Insert);

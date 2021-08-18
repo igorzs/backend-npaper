@@ -39,7 +39,11 @@ const Lancamento = sequelize.define("lancamentos", {
     tipo: {
         allowNull: false,
         type: Sequelize.INTEGER()
-    }
+    },
+    idUser: {
+        allowNull: true,
+        type: Sequelize.INTEGER
+    },
 });
 
 module.exports = Lancamento;
