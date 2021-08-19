@@ -34,6 +34,40 @@ exports.Insert = (req, res, next) => {
         .catch(error => next(error));
 };
 
+exports.GetAllReceitasUsuario = (req, res, next) => {
+    const idUser = req.params.idUser;
+
+    Lancamento.findAll({
+        where: {
+            tipo: 1,
+            idUser: idUser
+        }
+    })
+        .then(lancamento => {
+            if (lancamento) {
+                res.status(status.OK).send(lancamento);
+            }
+        })
+        .catch(error => next(error));
+}
+
+exports.GetAllDespesasUsuario = (req, res, next) => {
+    const idUser = req.params.idUser;
+
+    Lancamento.findAll({
+        where: {
+            tipo: 2,
+            idUser: idUser
+        }
+    })
+        .then(lancamento => {
+            if (lancamento) {
+                res.status(status.OK).send(lancamento);
+            }
+        })
+        .catch(error => next(error));
+}
+
 exports.SearchAll = (req, res, next) => {
     Lancamento.findAll()
         .then(lancamento => {
