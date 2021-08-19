@@ -13,7 +13,7 @@ exports.Insert = (req, res, next) => {
     const data = req.body.data;
     const situacao = req.body.situacao;
     const tipo = req.body.tipo;
-console.log(valor)
+    console.log(valor)
     //aqui passa os parametros com dados para os atributos do model
     Lancamento.create({
         descricao: descricao,
@@ -72,13 +72,39 @@ exports.GetAllDespesas = (req, res, next) => {
         .catch(error => next(error));
 }
 
+const formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+const convertLancamentoToJSON = (lancamento) => {
+    return {
+        id: lancamento.id,
+        descricao: lancamento.descricao,
+        valor: lancamento.valor,
+        situacao: lancamento.situacao,
+        tipo: lancamento.tipo,
+        data: formatDate(lancamento.data)
+    }
+}
+
 exports.SearchOne = (req, res, next) => {
     const id = req.params.id;
+    console.log('aqui');
 
     Lancamento.findByPk(id)
         .then(lancamento => {
             if (lancamento) {
-                res.status(status.OK).send(lancamento);
+                res.status(status.OK).send(convertLancamentoToJSON(lancamento));
             } else {
                 res.status(status.NOT_FOUND).send();
             }
@@ -87,45 +113,43 @@ exports.SearchOne = (req, res, next) => {
 };
 
 //atualizar os dados
-exports.Update = (req, res, next) => {
-    //na requisicao de atualizar
-    //quando atualizamos enviamos o id, que vai ser pego da url
-    const id = req.params.id;
-    const descricao = req.body.descricao;
-    const valor = req.body.valor;
-    const data = req.body.data;
-    const situacao = req.body.situacao;
-    const tipo = req.body.tipo;
+exports.Update = async (req, res, next) => {
+    try {
+        //na requisicao de atualizar
+        //quando atualizamos enviamos o id, que vai ser pego da url
+        const { receita } = req.body;
+        const id = req.params.id;
+        const descricao = receita.descricao;
+        const valor = receita.valor;
+        const data = receita.data;
+        const situacao = receita.situacao;
 
-    Lancamento.findByPk(id)
-        //primeiro precisamos verificar se o dado existe
-        //then = registra o que queremos que aconteca quando a Promise for resolvida
-        .then(lancamento => {
-            if (lancamento) {
-                //se existir, vai atualizar
-                //passa um objeto com as infos
-                lancamento.update({
-                    descricao: descricao,
-                    valor: valor,
-                    data: data,
-                    recebido: recebido
-                },
-                    //recebe um parametro id na clausula where
-                    {
-                        where: { id: id }
-                    })
-                    .then(() => {
-                        //status 200 é o padrao
-                        res.status(status.OK).send();
-                    })
-                    .catch(error => next(error));
-            } else {
-                //caso nao existir, retorna erro
-                res.status(status.NOT_FOUND).send();
-            }
-        })
-        //catch = registra o que queremos que aconteca quando a Promise falhar
-        .catch(error => next(error));
+        const lancamento = await Lancamento.findByPk(id)
+        if (lancamento) {
+            //se existir, vai atualizar
+            //passa um objeto com as infos
+            const lancamentoAtualizado = await lancamento.update({
+                descricao: descricao,
+                valor: valor,
+                data: data,
+                situacao: situacao
+            },
+                //recebe um parametro id na clausula where
+                {
+                    where: { id: id }
+                })
+            //status 200 é o padrao
+            res.status(status.OK).send(lancamentoAtualizado);
+        } else {
+            //caso nao existir, retorna erro
+            res.status(status.NOT_FOUND).send();
+        }
+
+
+    } catch (error) {
+        next(error);
+
+    }
 };
 
 
