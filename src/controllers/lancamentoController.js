@@ -151,6 +151,7 @@ exports.Update = async (req, res, next) => {
     try {
         //na requisicao de atualizar
         //quando atualizamos enviamos o id, que vai ser pego da url
+        //quando passo a const para lançamentos da erro 
         const { receita } = req.body;
         const id = req.params.id;
         const descricao = receita.descricao;
